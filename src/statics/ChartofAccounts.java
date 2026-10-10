@@ -16,24 +16,24 @@ import system.*;
 public class ChartofAccounts {
     private List<Account> accounts;
     
-    int[] assetCodes =  {100, 101, 110, 111, 112, 113, 120, 130, 140, 141, 150, 151, 152, 153, 154, 155, 160, 161};
-    String[] assetNames =  {"Cash", "Petty Cash", "Notes Receivable", "Interest Receivable", "Accounts Receivable", "Allowance for Uncollectible Accounts", "Merchandise Inventory", "Supplies", "Prepaid Insurance", "Prepaid Rent", "Furniture and Fixtures", "Accumulated Depreciation-Furniture and Fixtures", "Equipment", "Accumulated Depreciation-Equipment", "Service Vehicle", "Accumulated Depreciation-Service Vehicle", "Rent Deposit", "Utilities Deposit"};
-    
-    int[] liabilityCodes =  {200, 201, 202, 210, 211, 212, 213, 214, 220, 221, 230, 240};
-    String[] liabilityNames =  {"Notes Payable", "Interest Payable", "Accounts Payable", "Salaries Payable", "SSS and EC Contributions Payable", "Philhealth Contributions Payable", "Pag-IBIG Contributions Payable", "Withholding Taxes Payable", "Rent Payable", "Utilities Payable", "Value-Added Tax Payable", "Input Tax", "Output Tax", "Vouchers Payable"};
-    
-    int[] ownersEquityCodes =  {300, 301, 302};
-    String[] ownersEquityNames =  {"Therese Ballada, Capital", "Therese Ballada, Withdrawals", "Income Summary"};
-    
-    int[] revenueCodes =  {400, 401, 402, 410};
-    String[] revenueNames =  {"Sales", "Sales Discounts", "Sales Returns and Allowances", "Interest Income"};
-    
-    int[] costCodes =  {500, 501, 502, 503};
-    String[] costNames =  {"Purchases", "Transportation-In", "Purchases Discounts", "Purchases Returns and Allowances"};
-    
-    int[] expenseCodes =  {600, 601, 602, 603, 604, 605, 610, 611, 612, 613, 620, 630, 631, 632, 640, 650};
-    String[] expenseNames =  {"Advertising Expense", "Supplies Expense", "Insurance Expense", "Rent Expense", "Utilities Expense", "Repairs and Maintenance Expense", "Salaries Expense", "SSS and EC Contributions Expense", "Philhealth Contributions Expense", "Pag-IBIG Contributions Expense", "Uncollectible Accounts Expense", "Depreciation Expense-Furniture and Fixtures", "Depreciation Expense-Equipment", "Depreciation Expense-Service Vehicle", "Miscellaneous Expense", "Interest Expense"};
-    
+    int[] assetCodes = {100, 101, 110, 111, 112, 113, 120, 130, 140, 141, 150, 151, 152, 153, 154, 155, 160, 161};
+    String[] assetNames = {"Cash", "Petty Cash", "Notes Receivable", "Interest Receivable", "Accounts Receivable", "Allowance for Uncollectible Accounts", "Merchandise Inventory", "Supplies", "Prepaid Insurance", "Prepaid Rent", "Furniture and Fixtures", "Accumulated Depreciated - Furniture and Fixtures", "Equipment", "Accumulated Depreciated - Equipment", "Service Vehicle", "Accumulated Depreciated - Service Vehicle", "Rent Deposit", "Utilities Deposit"};
+
+    int[] liabilityCodes = {200, 201, 202, 210, 211, 212, 213, 214, 220, 221, 230};
+    String[] liabilityNames = {"Notes Payable", "Interest Payable", "Accounts Payable", "Salaries Payable", "SSS and EC Contributions Payable", "Philhealth Contributions Payable", "Pag-IBIG Contributions Payable", "Withholding Taxes Payable", "Rent Payable", "Utilities Payable", "VAT Payable"};
+
+    int[] ownersEquityCodes = {300, 301, 302};
+    String[] ownersEquityNames = {"Therese Ballada, Capital", "Therese Ballada, Withdrawals", "Income Summary"};
+
+    int[] revenueCodes = {400, 401, 402, 410};
+    String[] revenueNames = {"Sales", "Sales Discounts", "Sales Returns and Allowances", "Interest Income"};
+
+    int[] costCodes = {500, 501, 502, 503};
+    String[] costNames = {"Purchases", "Transportation-in", "Purchases Discounts", "Purchase Return and Allowances"};
+
+    int[] expenseCodes = {600, 601, 602, 603, 604, 605, 610, 611, 612, 613, 620, 630, 631, 632, 640, 650};
+    String[] expenseNames = {"Advertising Expense", "Supplies Expense", "Insurance Expense", "Rent Expense", "Utilities Expense", "Repairs and Maintenance Expense", "Salaries Expense", "SSS and EC Contributions Expense", "Philhealth Contributions Expense", "Pag-IBIG Contributions Expense", "Uncollectible Accounts Expense", "Depreciation Expense - Furniture and Fixtures", "Depreciation Expense - Equipment", "Depreciation Expense - Service Vehicle", "Miscellaneous Expense", "Interest Expense"};
+
     public ChartofAccounts(){
         accounts = new ArrayList<>();
         int i;
@@ -51,24 +51,24 @@ public class ChartofAccounts {
         }
         
         for(i=0; i<ownersEquityCodes.length; i++){
-            if(assetCodes[i] == 301){
-                accounts.add(new Account(assetCodes[i], assetNames[i], AccountType.ASSET, true));
+            if(ownersEquityCodes[i] == 301){
+                accounts.add(new Account(ownersEquityCodes[i], ownersEquityNames[i], AccountType.OWNERSEQUITY, true));
                 continue;
             }
             accounts.add(new Account(ownersEquityCodes[i], ownersEquityNames[i], AccountType.OWNERSEQUITY, false));
         }
         
         for(i=0; i<revenueCodes.length; i++){
-            if(assetCodes[i] == 401 || assetCodes[i] == 402){
-                accounts.add(new Account(assetCodes[i], assetNames[i], AccountType.ASSET, true));
+            if(revenueCodes[i] == 401 || revenueCodes[i] == 402){
+                accounts.add(new Account(revenueCodes[i], revenueNames[i], AccountType.REVENUE, true));
                 continue;
             }
             accounts.add(new Account(revenueCodes[i], revenueNames[i], AccountType.REVENUE, false));
         }
         
         for(i=0; i<costCodes.length; i++){
-            if(assetCodes[i] == 502 || assetCodes[i] == 503){
-                accounts.add(new Account(assetCodes[i], assetNames[i], AccountType.ASSET, true));
+            if(costCodes[i] == 502 || costCodes[i] == 503){
+                accounts.add(new Account(costCodes[i], costNames[i], AccountType.COST, true));
                 continue;
             }
             accounts.add(new Account(costCodes[i], costNames[i], AccountType.COST, false));
