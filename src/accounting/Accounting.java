@@ -8,13 +8,10 @@ package accounting;
  *
  * @author Ryan
  */
-import statics.ChartofAccounts;
+import functions.*;
 import system.*;
-import java.util.UUID;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import statics.*;
+
 public class Accounting {
 
     /**
@@ -35,7 +32,7 @@ public class Accounting {
          * 
          * TO-DO list: 
          * ===========================================================================================================
-         * User interface - wire framing and JFrame
+         *  User interface - wire framing and JFrame
             Perpetual inventory system - sales must reduce inventory
             Credit term tracking - 2/10 n/30
             Chart of accounts and opening trial balance can be pulled from a csv file or a database
@@ -44,73 +41,46 @@ public class Accounting {
             1. Statement of Financial Performance - Income statement
             2. Statement of Financial Position - Balance sheet
             3. Statement of Changes in Equity 
-
             date for transaction is set to the date of input, must be changed to user input date
             every time user use an account, the system search the chart of account, idk if there is an efficient way
+            display methods in utils will be removed once the jframe is ready
+            aggregate transactions to GeneralJournal and TAccounts to GeneralLedger in statics
+            jframe level input validation for account name and account code 
+            jframe level input validation for credits - debits balance (logic is in Transaction.java-- currently, unbalance transaction are noticed but still goes trough)
+            LocalDate.now() instance should be change to the actual user input date
          * ============================================================================================================
          */
         
-        ChartofAccounts coa = new ChartofAccounts();
-//        coa.display();
-
-        Transaction t0 = new OpeningTrialBalance().createOpeningBalanceTransaction(LocalDate.now());
         
-        Account cash = coa.getAccounts()
-                .stream()
-                .filter(acc -> acc.name().equalsIgnoreCase("cash"))
-                .findFirst()
-                .orElse(null); // handle if null
-        Account accountsPayable = coa.getAccounts()
-                .stream()
-                .filter(acc -> acc.name().toLowerCase().equals("accounts payable"))
-                .findFirst()
-                .orElse(null);
+        Transaction t0 = Utils.initializeOpeningTrialBalance(LocalDate.now()); // impute begining balances to ledger
         
         
+        Account cash = Utils.findAccount("cash"); // create account object - to-do validation if null
+        Account accountsPayable = Utils.findAccount("accounts payable");
         
         
-        
-        JournalEntryItem entry1 = new JournalEntryItem(cash, BigDecimal.valueOf(1000), EntryType.DEBIT); // inputs
-        JournalEntryItem entry2 = new JournalEntryItem(accountsPayable, BigDecimal.valueOf(1000), EntryType.CREDIT);
-        
-        
-        Transaction t1 = new Transaction(UUID.randomUUID(), LocalDate.now(), "Loan 1000 pesos", List.of(entry1, entry2)); // aggregating to one transaction
-        
-        System.out.println(t1.getDate() + " | " + t1.getItems().get(0).account().name() + " | " + t1.getItems().get(0).entryType() + ": " + t1.getItems().get(0).amount());
-        System.out.println(t1.getDate() + " | " + t1.getItems().get(1).account().name() + " | " + t1.getItems().get(1).entryType() + ": " + t1.getItems().get(1).amount());
-        System.out.println(t1.getDescription());
+        JournalEntryItem entry1 = Utils.createEntry(cash, 1000, EntryType.DEBIT); // creating entry
+        JournalEntryItem entry2 = Utils.createEntry(accountsPayable, 1000, EntryType.CREDIT);
+        Transaction t1 = Utils.createTransaction(LocalDate.now(), "Loan 1000 pesos", new JournalEntryItem[] {entry1, entry2}); // aggregating entries to one transaction
         
         
-        JournalEntryItem entry3 = new JournalEntryItem(accountsPayable, BigDecimal.valueOf(500), EntryType.DEBIT); // inputs
-        JournalEntryItem entry4 = new JournalEntryItem(cash, BigDecimal.valueOf(500), EntryType.CREDIT);
+        JournalEntryItem entry3 = Utils.createEntry(accountsPayable, 500, EntryType.DEBIT); // second transaction
+        JournalEntryItem entry4 = Utils.createEntry(cash, 500, EntryType.CREDIT);
+        Transaction t2 = Utils.createTransaction(LocalDate.now(), "Paid 500 pesos", new JournalEntryItem[] {entry3, entry4}); // LocalDate.now() should be change to the actual user input date
         
         
-        System.out.println("");
-        
-        Transaction t2 = new Transaction(UUID.randomUUID(), LocalDate.now(), "Paid 500 pesos", List.of(entry3, entry4)); // aggregating to one transaction
-        
-        System.out.println(t1.getDate() + " | " + t2.getItems().get(0).account().name() + " | " + t2.getItems().get(0).entryType() + ": " + t2.getItems().get(0).amount());
-        System.out.println(t1.getDate() + " | " + t2.getItems().get(1).account().name() + " | " + t2.getItems().get(1).entryType() + ": " + t2.getItems().get(1).amount());
-        System.out.println(t2.getDescription());
+        Utils.displayTransaction(t1); // printing for testing
+        Utils.displayTransaction(t2);
         
         
         
         
+        TAccount cashTAccount = Utils.createTAccountAndInitializeBeginingBalance("cash", t0); // create a TAccount and initializes its begining balannce
+        Utils.addEntries(cashTAccount, new JournalEntryItem[] {entry1, entry4}); // add amounts to the pased taccount
+        Utils.displayTAcount(cashTAccount); // display taccount
         
-        
-        
-        
-        TAccount cashTAccount = new TAccount(cash);
-        cashTAccount.addEntry(t0.getItems().stream().filter(acc -> acc.account().name().equalsIgnoreCase("cash")).findFirst().orElse(null));
-        cashTAccount.addEntry(entry1);
-        cashTAccount.addEntry(entry4);
-//        cashTAccount.addEntry(entry2);
-        
-        System.out.println("\n" + cashTAccount.getAccount().name());
-        System.out.println("Debits: ");
-        cashTAccount.getDebits().stream().forEach(deb -> System.out.println(deb.amount()));
-        System.out.println("Credits: ");
-        cashTAccount.getCredits().stream().forEach(cred -> System.out.println(cred.amount()));
-        System.out.println("\ncash balance: " + cashTAccount.getNetBalance());
+        TAccount APTAccount = Utils.createTAccountAndInitializeBeginingBalance("accounts payable", t0); 
+        Utils.addEntries(APTAccount, new JournalEntryItem[] {entry2, entry3}); 
+        Utils.displayTAcount(APTAccount);
     }
 }
