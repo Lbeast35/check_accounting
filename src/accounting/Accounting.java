@@ -11,6 +11,7 @@ package accounting;
 import functions.*;
 import system.*;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Accounting {
 
@@ -33,8 +34,8 @@ public class Accounting {
          * TO-DO list: 
          * ===========================================================================================================
          *  User interface - wire framing and JFrame
-            Perpetual inventory system - sales must reduce inventory
-            Credit term tracking - 2/10 n/30
+            Perpetual inventory system - sales must reduce inventory *******************************************************************
+            Credit term tracking - 2/10 n/30 *******************************************************************************************
             Chart of accounts and opening trial balance can be pulled from a csv file or a database
             Database for transactions that can be exported to csv file
             Unadjusted trial balance and:
@@ -44,10 +45,14 @@ public class Accounting {
             date for transaction is set to the date of input, must be changed to user input date
             every time user use an account, the system search the chart of account, idk if there is an efficient way
             display methods in utils will be removed once the jframe is ready
-            aggregate transactions to GeneralJournal and TAccounts to GeneralLedger in statics
+            aggregate transactions to GeneralJournal and TAccounts to GeneralLedger in statics ****************************************
             jframe level input validation for account name and account code 
             jframe level input validation for credits - debits balance (logic is in Transaction.java-- currently, unbalance transaction are noticed but still goes trough)
             LocalDate.now() instance should be change to the actual user input date
+            
+            
+            handle nulls in transaction isnt balance
+            handle nulls if entry isnt found or amount is greater than in credit term tracking
          * ============================================================================================================
          */
         
@@ -76,11 +81,11 @@ public class Accounting {
         
         
         TAccount cashTAccount = Utils.createTAccountAndInitializeBeginingBalance("cash", t0); // create a TAccount and initializes its begining balannce
-        Utils.addEntries(cashTAccount, new JournalEntryItem[] {entry1, entry4}); // add amounts to the pased taccount
+        Utils.addEntries(cashTAccount, List.of(t1, t2)); // add amounts to the pased taccount
         Utils.displayTAcount(cashTAccount); // display taccount
         
         TAccount APTAccount = Utils.createTAccountAndInitializeBeginingBalance("accounts payable", t0); 
-        Utils.addEntries(APTAccount, new JournalEntryItem[] {entry2, entry3}); 
+        Utils.addEntries(APTAccount, List.of(t1, t2)); 
         Utils.displayTAcount(APTAccount);
     }
 }
