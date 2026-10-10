@@ -33,15 +33,21 @@ public class Accounting {
          * 
          * output: unadjusted trial balance, and statements of financial performance, financial position, and changes in equity
          * 
-         * chart of accounts     OK
-         * preexisting unadjusted trial balance
-         * connect to database
-         * export records to comma separated values file
-         * 
-         * 
-         * chart of accounts can be derived from a csv file
-         * as well as opening trial balance
-         * 
+         * TO-DO list: 
+         * ===========================================================================================================
+         * User interface - wire framing and JFrame
+            Perpetual inventory system - sales must reduce inventory
+            Credit term tracking - 2/10 n/30
+            Unedited chart of accounts and opening trial balance; can be pulled from a csv file or a database
+            Database for transactions that can be exported to csv file
+            Unadjusted trial balance and:
+            1. Statement of Financial Performance
+            2. Statement of Financial Position
+            3. Statement of Changes in Equity
+
+            date for transaction is set to the date of input, must be changed to user input date
+            every time user use an account, the system search the chart of account, idk if there is an efficient way
+         * ============================================================================================================
          */
         
         ChartofAccounts coa = new ChartofAccounts();
